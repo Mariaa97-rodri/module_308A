@@ -1,4 +1,4 @@
-//PART 1: Objects, nested data, method
+// //PART 1: Objects, nested data, method
 const adventurer = {
     name: "Robin",
     health: 10,
@@ -26,13 +26,13 @@ for (let item of adventurer.inventory) {
 }
 adventurer.roll();
 
-//PART 2: Character Class
-class character {
+// //PART 2: Character Class
+class Character {
     static MAX_HEALTH = 100;
 
     constructor(name){
         this.name = name;
-        this.health = character.MAX_HEALTH;
+        this.health = Character.MAX_HEALTH;
         this.inventory = [];
     }
 
@@ -45,7 +45,42 @@ class character {
 
 //Recreate Robin with the class
 
-const robin = new character("Robin");
+const robin = new Character("Robin");
 robin.inventory = ["sword","potion","artifact"];
 
-robin.companion = new character("Leo");
+robin.companion = new Character("Leo");
+robin.companion.type = "Cat";
+
+robin.companion.companion = new Character("Frank");
+robin.companion.companion.type = "Flea";
+robin.companion.companion.inventory = ["small hat", "sunglasses"];
+
+robin.roll();
+robin.companion.roll();
+
+//PART 3: Adventurer & Companion Classes
+class Adventurer extends Character {
+    static ROLES = ["Fighter", "Healer", "Wizard"];
+
+    constructor(name,role) {
+        if( !Adventurer.ROLES.includes(role)) {
+            throw new Error(`invalid role. Choose from: ${Adventurer.ROLES.join(",")}`);
+        }
+        super(name);
+        this.role = role;
+        this.inventory.push("bedroll", "50 gold coins");
+    }
+    scout() {
+        console.log(`${this.name} is scouting ahead...`);
+        super.roll();
+    }
+    attack(target) {
+        const roll = this.roll();
+        if(roll > 10) {
+            target.health -= 10;
+            console.log(`${this.name} hits ${target.name}!`);
+        } else {
+            console.log(`${this.name} missed!`);
+        }
+    }
+}
