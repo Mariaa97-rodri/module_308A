@@ -111,8 +111,8 @@ robin2.companion.companion = new Companion("Frank","Flea");
 robin2.companion.companion.inventory = ["small hat", "sunglasses"];
 
 //PART 4: Static Properties
-Character.MAX_HEALTH = 100;
-Adventurer.ROLES = ["Fighter", "Healer", "Wizard"];
+// Character.MAX_HEALTH = 100;
+// Adventurer.ROLES = ["Fighter", "Healer", "Wizard"];
 
 //PART 5: Factory Pattern
 
