@@ -5,7 +5,7 @@ const adventurer = {
     inventory: ["sword", "potion","artifact"],
 
     companion: {
-        name: "leo",
+        name: "Leo",
         type: "Cat",
         companion: {
             name: "Frank",
@@ -26,7 +26,7 @@ for (let item of adventurer.inventory) {
 }
 adventurer.roll();
 
-// //PART 2: Character Class
+// //PART 2: Character Class 
 class Character {
     static MAX_HEALTH = 100;
 
@@ -84,3 +84,94 @@ class Adventurer extends Character {
         }
     }
 }
+
+//companion class
+
+class Companion extends Character {
+    constructor (name, type) {
+        super(name);
+        this.type = type;
+    }
+    assist () {
+        console.log(`${this.name} the ${this.type} assists in battle`)
+    }
+}
+
+//Recreate Robin 
+const robin2 = new Adventurer("Robin", "Fighter");
+robin2.companion = new Companion("Leo","Cat");
+robin2.companion.companion = new Companion("Frank","Flea");
+robin2.companion.companion.inventory = ["small hat", "sunglasses"];
+
+//PART 4: Static Properties
+Character.MAX_HEALTH = 100;
+Adventurer.ROLES = ["Fighter", "Healer", "Wizard"];
+
+//PART 5: Factory Pattern
+
+class AdventurerFactory {
+    constructor(role) {
+        this.role = role;
+        this.adventurers = [];
+    }
+
+    generate(name) {
+        const newAdventurer = new Adventurer(name, this.role);
+        this.adventurers.push(newAdventurer);
+        return newAdventurer;
+    }
+
+    findByIndex(index) {
+        return this.adventurers[index];
+    }
+
+    findByName(name) {
+        return this.adventurers.find(a => a.name === name);
+    }
+}
+
+//Using Factory
+const healers = new AdventurerFactory("Healer");
+
+const robinHealer = healers.generate("Robin");
+const lunaHealer = healers.generate("Luna");
+
+console.log(healers.findByName("Robin"));
+
+//PART 6 - Duel Method
+
+Adventurer.prototype.duel = function(opponent) {
+    console.log(`⚔️${this.name} vs ${opponent.name}⚔️`);
+
+    while(this.health > 50 && opponent.health > 50) {
+        const roll1 = this.roll();
+        const roll2 = opponent.roll();
+
+        if(roll1 > roll2) {
+            opponent.health -= 1;
+            console.log(`${this.name} wins the round!`);
+        } else if (roll2 > roll1) {
+            this.health -= 1;
+            console.log(`${opponent.name} wins the round!`);
+        } else {
+            console.log("Tie!");
+        }
+        console.log(`${this.name}: ${this.health} HP`);
+        console.log(`${opponent.name}: ${opponent.health} HP`);
+        console.log("--------------------");
+    }
+    const winner = this.health > opponent.health ? this.name : opponent.name;
+    console.log(`🏆${winner} wins the duel!`);
+};
+
+//Test Duel
+//opposing rolls
+//health substraction
+//loop until 50 HP
+//Winner logged
+const fighters = new AdventurerFactory("Fighter");
+
+const aragorn = fighters.generate("Aragorn");
+const legolas = fighters.generate("Legolas");
+
+aragorn.duel(legolas);
