@@ -44,6 +44,9 @@ class Character {
 }
 
 //Recreate Robin with the class
+//create class
+//method added to class
+//instances created
 
 const robin = new Character("Robin");
 robin.inventory = ["sword","potion","artifact"];
@@ -98,6 +101,10 @@ class Companion extends Character {
 }
 
 //Recreate Robin 
+//inheritance
+//role validation
+//companion class
+//custom methods
 const robin2 = new Adventurer("Robin", "Fighter");
 robin2.companion = new Companion("Leo","Cat");
 robin2.companion.companion = new Companion("Frank","Flea");
@@ -131,6 +138,9 @@ class AdventurerFactory {
 }
 
 //Using Factory
+//factory implemented
+//storage array
+//search methods
 const healers = new AdventurerFactory("Healer");
 
 const robinHealer = healers.generate("Robin");
@@ -175,3 +185,15 @@ const aragorn = fighters.generate("Aragorn");
 const legolas = fighters.generate("Legolas");
 
 aragorn.duel(legolas);
+
+//PART 7: Adventurer Forth
+
+class Dragon extends Character {
+    breatheFire(target) {
+        console.log(`${this.name} breathes fire on ${target.name}!`)
+        target.health -= 20;
+    }
+}
+
+const smaug = new Dragon ("Smaug");
+smaug.breatheFire(aragorn);
