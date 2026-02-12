@@ -19,7 +19,7 @@ export async function getUserData(id) {
     };
     //Step 3: Ask central which databse to use
     const dbName = await central(id);
-
+    // dbs[dbName](id)
     //Step 4: Run correct everything into one object
     const [basicInfo, personalInfo] = await Promise.all([
         dbs[dbName](id),
