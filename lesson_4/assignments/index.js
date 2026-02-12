@@ -1,4 +1,4 @@
-import * as Carousel from ".\Carousel.jsx";
+import * as Carousel from "./Carousel.jsx"
 import axios from "axios";
 
 // The breed selection input element.
@@ -23,6 +23,18 @@ axios.defaults.headers.common["x-api-key"] = API_KEY;
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+
+function updateProgress(event) {
+    if (event.lengthComputable) {
+        const percent = (event.loaded / event.total) * 100;
+        progressBar.style.width = `${percent}%`;
+        console.log(`Progress: ${percent.toFixed(2)}%`);
+    } else {
+        // Sometimes length is unknown
+        progressBar.style.width = "50%"; 
+    }
+}
+
 
 //Interceptors
 axios.interceptors.request.use(config => {
@@ -78,14 +90,85 @@ async function initialLoad() {
 
     //Auto-load first breed
     breedSelect.value = response.data[0].id;
-    localBreed();
+    loadBreed();
 }
 
 initialLoad();
 
 //Breed Change
 
-async function loadBreed();
+async function loadBreed() {
+    const selected = breedSelect.value;
+    infoDump.innerHTML = "";
+
+    const response = await axios.get("/images/search", {
+        params: {
+            breed_ids: selected,
+            limit: 10
+        },
+        onDownloadProgress: updateProgress
+    });
+
+    const images = response.data.map(img => ({
+        id: img.id,
+        url: img.url || "https://via.placeholder.com/600x400?text=No+Image"
+    }));
+
+    buildCarousel(images);
+
+    const breedInfo = response.data[0]?.breeds?.[0];
+
+    if(!breedInfo) {
+        infoDump.textContent = "No breed information available.";
+        return;
+    }
+
+    infoDump.innerHTML = `
+        <h3>${breedInfo.name}</h3>
+        <p><strong>Origin:</strong> ${breedInfo.origin}</p>
+        <p><strong>Temperament:</strong> ${breedInfo.temperament}</p>
+        <p>${breedInfo.description}</p>
+    `;
+}
+
+
+//favorite toggle
+export async function favourite(imgId) {
+    try {
+        const response = await axios.get("/favourites");
+        const existing = response.data.find(f => f.image?.id === imgId || f.image_id === imgId);
+
+        if(existing) {
+            await axios.delete(`/favourites/${existing.id}`);
+            console.log("Removed favourite");
+        } else {
+            await axios.post("/favourites", { image_id: imgId });
+            console.log("Added favourite");
+        }
+    } catch (err) {
+        console.error("Error toggling favourite:", err);
+    }
+}
+
+//Show Favourites
+async function getFavourites() {
+
+    const response = await axios.get("/favourites");
+
+    const images = response.data.map(fav => ({
+    id: fav.image_id,
+    url: fav.image?.url || "https://via.placeholder.com/600x400?text=No+Image"
+}));
+
+
+    buildCarousel(images);
+
+    infoDump.innerHTML = "<h2>Your Favourite Cats</h2>"
+}
+
+breedSelect.addEventListener("change", loadBreed);
+getFavouritesBtn.addEventListener("click", getFavourites);
+
 /**
  * 2. Create an event handler for breedSelect that does the following:
  * - Retrieve information on the selected breed from the cat API using fetch().
@@ -152,9 +235,9 @@ async function loadBreed();
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
-export async function favourite(imgId) {
-  // your code here
-}
+// export async function favourite(imgId) {
+//   // your code here
+// }
 
 /**
  * 9. Test your favourite() function by creating a getFavourites() function.
