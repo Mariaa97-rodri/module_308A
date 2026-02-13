@@ -17,6 +17,13 @@ body {
   border-bottom: 1px solid black;
 }
 
+#progressBar {
+  width: 0%;
+  height: 6px;
+  background: #4caf50;
+  transition: width 180ms linear;
+}
+
 .favourite-button {
   position: absolute;
   top: 10px;

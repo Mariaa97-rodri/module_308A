@@ -1,25 +1,26 @@
-//This file manages the user's favorite cats
-
+//load favorites from API
+import { fetchFavorites } from "./api.js";
 //Keep track of favorites in memory
 let favorites = new Set();
 
-//load favorites from API
+
+
 export async function loadFavorites() {
-    const response = await fetch("https://api.thecatapi.com/v1/favourites", {
-        headers: {
-            "x-api-key":"live_Cp8KEYgbCRuIeRG3E1oVmbm6xLiILjdIzVUXQY3zMFvXo3fNq2Xg8z55eYVqAFR7",
-        
-        },
-});
-const data = await response.json();
+    const data = await fetchFavorites();
 
-//Remember all favorite image IDs
-data.forEach((fav) => {
-    favorites.add(fav.image_id);
-});
-return data;
+    data.forEach((fav) => {
+        favorites.add(fav.image_id);
+    });
 
+    return data;
 }
+
+// //Remember all favorite image IDs
+// data.forEach((fav) => {
+//     favorites.add(fav.image_id);
+// });
+// return data;
+
 
 //check if a cat is in favorites
 export function isFavorite(imageId) {

@@ -16,6 +16,13 @@ body {
   left: 0;
 }
 
+#progressBar {
+  background: #4caf50;
+  width: 0%;
+  height: 6px;
+  transition: width .18s linear;
+}
+
 .favourite-button {
   z-index: 99999;
   color: #ffb6c1;

@@ -1,5 +1,3 @@
-//This file updates the HTML
-
 //Get HTML elements
 export const breedSelect = document.getElementById("breedSelect");
 export const infoDump = document.getElementById("infoDump");
@@ -62,5 +60,5 @@ export function showError(message) {
 
 //Update progress bar
 export function updateProgress(percent) {
-    progressBar.style.width = `${percent}`
+    progressBar.style.width = percent;
 }

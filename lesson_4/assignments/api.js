@@ -1,6 +1,6 @@
-// ...existing code...
 const API_KEY = "live_Cp8KEYgbCRuIeRG3E1oVmbm6xLiILjdIzVUXQY3zMFvXo3fNq2Xg8z55eYVqAFR7";
 const BASE_URL = "https://api.thecatapi.com/v1";
+const SUB_ID = "my-cat-app-user";
 
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.headers.common["x-api-key"] = API_KEY;
@@ -29,17 +29,19 @@ export async function fetchCatsByBreed(breedId, limit = 10) {
 
 export async function fetchFavorites() {
     try {
-        const res = await axios.get("/favourites");
+        const res = await axios.get("/favourites", {
+            params: { sub_id: "my-cat-app-user" },
+        });
         return res.data;
     } catch (err) {
-        console.error("fetchFavorites error:", err);
+        console.error("fetchFavourites error:", err);
         return [];
     }
 }
 
 export async function addFavorite(imageId) {
     try {
-        const res = await axios.post("/favourites", { image_id: imageId });
+        const res = await axios.post("/favourites", { image_id: imageId, sub_id: "my-cat-app-user" });
         return res.data;
     } catch (err) {
         console.error("addFavorite error:", err);
@@ -60,18 +62,18 @@ export async function removeFavorite(favouriteId) {
 // Helper: find the favourite record for an image_id and delete it
 export async function removeFavoriteByImageId(imageId) {
     try {
-        // fetch favourites, find the record with this image_id
-        const res = await axios.get("/favourites");
+        const res = await axios.get("/favourites", {
+            params: { sub_id: SUB_ID }    // ✅ filter by your user
+        });
         const fav = res.data.find((f) => f.image_id === imageId);
         if (!fav) {
             console.warn("No favourite record found for image:", imageId);
             return false;
         }
-        await axios.delete(`/favourites/${fav.id}`);
+        await axios.delete(`/favourites/${fav.id}`);  // ✅ British spelling
         return true;
     } catch (err) {
         console.error("removeFavoriteByImageId error:", err);
         return false;
     }
 }
-// ...existing code...
