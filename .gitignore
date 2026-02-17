@@ -1,2 +1,4 @@
 # Instructor guides — not for student distribution
 **/instructor_guide/
+node_modules/
+dist/
